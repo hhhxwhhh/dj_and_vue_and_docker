@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     #添加博客应用
+    'rest_framework',
     'blog',
 ]
 
