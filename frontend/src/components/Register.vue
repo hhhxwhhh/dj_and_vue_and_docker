@@ -1,8 +1,8 @@
 <template>
-  <div class="login-container">
-    <div class="login-form">
-      <h2>用户登录</h2>
-      <form @submit.prevent="handleLogin">
+  <div class="register-container">
+    <div class="register-form">
+      <h2>用户注册</h2>
+      <form @submit.prevent="handleRegister">
         <div class="form-group">
           <input 
             v-model="username" 
@@ -22,16 +22,25 @@
           />
         </div>
         <div class="form-group">
+          <input 
+            v-model="confirmPassword" 
+            type="password" 
+            placeholder="确认密码" 
+            required 
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
           <button 
             type="submit" 
             :disabled="loading" 
-            class="login-button"
+            class="register-button"
           >
-            {{ loading ? '登录中...' : '登录' }}
+            {{ loading ? '注册中...' : '注册' }}
           </button>
         </div>
         <div class="form-footer">
-          <p>还没有账号？ <a href="#" @click.prevent="switchToRegister">立即注册</a></p>
+          <p>已有账号？ <a href="#" @click.prevent="switchToLogin">立即登录</a></p>
         </div>
         <div v-if="error" class="error-message">
           {{ error }}
@@ -44,30 +53,38 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { login } from '../api'
+import { register } from '../api'
 
 const router = useRouter()
 const username = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const loading = ref(false)
 const error = ref('')
 
-const handleLogin = async () => {
+const handleRegister = async () => {
   try {
+    // 验证密码确认
+    if (password.value !== confirmPassword.value) {
+      error.value = '两次输入的密码不一致'
+      return
+    }
+    
     loading.value = true
     error.value = ''
     
-    const result = await login(username.value, password.value)
+    const result = await register(username.value, password.value)
     
     if (result.success) {
-      // 跳转到首页
-      router.push('/home')
+      // 注册成功，跳转到登录页面
+      alert('注册成功，请登录')
+      router.push('/login')
     } else {
       error.value = result.message
     }
   } catch (err) {
     if (err.response && err.response.data) {
-      error.value = err.response.data.message || '登录失败，请检查用户名和密码'
+      error.value = err.response.data.message || '注册失败'
     } else {
       error.value = '网络错误，请稍后重试'
     }
@@ -76,13 +93,13 @@ const handleLogin = async () => {
   }
 }
 
-const switchToRegister = () => {
-  router.push('/register')
+const switchToLogin = () => {
+  router.push('/login')
 }
 </script>
 
 <style scoped>
-.login-container {
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,7 +107,7 @@ const switchToRegister = () => {
   background-color: #f5f5f5;
 }
 
-.login-form {
+.register-form {
   background: white;
   padding: 2rem;
   border-radius: 8px;
@@ -99,7 +116,7 @@ const switchToRegister = () => {
   max-width: 400px;
 }
 
-.login-form h2 {
+.register-form h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   color: #333;
@@ -124,10 +141,10 @@ const switchToRegister = () => {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.login-button {
+.register-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   border: none;
   border-radius: 4px;
@@ -137,11 +154,11 @@ const switchToRegister = () => {
   margin-top: 1rem;
 }
 
-.login-button:hover:not(:disabled) {
-  background-color: #0056b3;
+.register-button:hover:not(:disabled) {
+  background-color: #218838;
 }
 
-.login-button:disabled {
+.register-button:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
 }

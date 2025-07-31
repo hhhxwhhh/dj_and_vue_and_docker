@@ -9,13 +9,14 @@ import PostForm from '../components/PostForm.vue'
 import PostDetailPage from '../components/PostDetailPage.vue'
 import PostFormPage from '../components/PostFormPage.vue'
 import Login from '../components/Login.vue'
+import Register from '../components/Register.vue'
 import Home from '../components/Home.vue'
 import PostsPage from '../components/PostsPage.vue'
 
 // 路由守卫
 const requireAuth = (to, from, next) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  if (!isLoggedIn && to.path !== '/login') {
+  if (!isLoggedIn && to.path !== '/login' && to.path !== '/register') {
     next('/login')
   } else {
     next()
@@ -25,6 +26,7 @@ const requireAuth = (to, from, next) => {
 const routes = [
   { path: '/', redirect: '/home' },
   { path: '/login', component: Login },
+  { path: '/register', component: Register },
   { path: '/home', component: Home, beforeEnter: requireAuth },
   { path: '/posts', component: PostsPage, beforeEnter: requireAuth },
   { path: '/post/:id', component: PostDetailPage, props: true, beforeEnter: requireAuth },
@@ -40,9 +42,9 @@ const router = createRouter({
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
-  // 如果已登录且尝试访问登录页，则重定向到首页
+  // 如果已登录且尝试访问登录页或注册页，则重定向到首页
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  if (isLoggedIn && to.path === '/login') {
+  if (isLoggedIn && (to.path === '/login' || to.path === '/register')) {
     next('/home')
   } else {
     next()

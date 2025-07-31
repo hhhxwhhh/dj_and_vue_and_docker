@@ -48,6 +48,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { logout } from '../api'
 
 const router = useRouter()
 const username = ref('')
@@ -64,13 +65,16 @@ onMounted(() => {
   username.value = localStorage.getItem('username') || '用户'
 })
 
-const handleLogout = () => {
-  // 清除登录状态
-  localStorage.removeItem('isLoggedIn')
-  localStorage.removeItem('username')
-  
-  // 跳转到登录页面
-  router.push('/login')
+const handleLogout = async () => {
+  try {
+    await logout()
+    // 跳转到登录页面
+    router.push('/login')
+  } catch (error) {
+    console.error('登出失败:', error)
+    // 即使后端调用失败，也要跳转到登录页面
+    router.push('/login')
+  }
 }
 
 const goToPosts = () => {
