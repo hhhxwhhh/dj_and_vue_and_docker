@@ -1,43 +1,37 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-defineProps({
-  msg: String,
+const posts = ref([])
+
+onMounted(async () => {
+  const res = await axios.get('http://localhost:8000/api/posts/')
+  posts.value = res.data
 })
-
-const count = ref(0)
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
-  </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Learn more about IDE Support for Vue in the
-    <a
-      href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
-      target="_blank"
-      >Vue Docs Scaling up Guide</a
-    >.
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <h1>博客列表</h1>
+  <div v-if="posts.length === 0">暂无内容</div>
+  <ul v-else>
+    <li v-for="post in posts" :key="post.id" style="margin-bottom: 1em;">
+      <strong>{{ post.title }}</strong>
+      <p>{{ post.content }}</p>
+      <small>{{ post.created_at }}</small>
+    </li>
+  </ul>
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
+h1 {
+  color: #42b983;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+li {
+  border-bottom: 1px solid #eee;
+  padding-bottom:10px;
 }
 </style>
