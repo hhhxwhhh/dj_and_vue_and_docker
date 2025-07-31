@@ -11,6 +11,8 @@ services:
       - DJANGO_DB_NAME=django_db
       - DJANGO_DB_USER=django
       - DJANGO_DB_PASSWORD=django123
+    ports:
+      - 8000:8000
     depends_on:
       - db
 
