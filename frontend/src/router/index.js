@@ -4,18 +4,18 @@ import PostList from '../components/PostList.vue'
 import PostDetail from '../components/PostDetail.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 import PostForm from '../components/PostForm.vue'
-import PostDetail from '../components/PostDetail.vue'
 
+// 导入新创建的页面组件
+import PostDetailPage from '../components/PostDetailPage.vue'
+import PostFormPage from '../components/PostFormPage.vue'
 
 
 const routes = [
   { path: '/', component: PostList },
-  { path: '/post/:id', component: PostDetail, props: true },
+  { path: '/post/:id', component: PostDetailPage, props: true },
   { path: '/hello', component: HelloWorld },
-  { path: '/post-form', component: PostForm },
-  { path: '/post-form/:id', component: PostForm, props: true },
-    // 添加其他路由配置
-    { path: '/post-form/:id', component: PostForm, props: true },
+  { path: '/post-form', component: PostFormPage },
+  { path: '/post-form/:id', component: PostFormPage, props: true },
 ]
 
 const router = createRouter({

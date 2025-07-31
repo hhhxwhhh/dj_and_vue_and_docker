@@ -26,4 +26,3 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     
-    
